@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\PostApiController;
-use App\Models\Post;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,23 +16,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Public routes
+Route::post('/register', [UserController::class, 'register']);
+Route::post('/login', [UserController::class, 'login']);
+Route::get('/products', [ProductController::class, 'get']);
+Route::get('/products/search/{name}', [ProductController::class, 'search']);
 
-Route::get('/post', [PostApiController::class, 'index']);
-
-Route::post('/post', [PostApiController::class. 'store']);
-
-Route::put('/post/{post}', [PostApiController::class, 'update']);
-
-Route::delete('/post/{post}', [PostApiController::class, 'delete']);
-
-Route::put('/post/{post}', function (Post $post) {
-    
-    
-});
-
-Route::delete('/post/{post}', function (Post $post) {
-    
+// Protected routes
+Route::group(['middleware' => ['auth:sanctum']], function() {
+    Route::post('/add', [ProductController::class, 'store']);
+    Route::put('/products{id}', [ProductController::class, 'update']);
+    Route::delete('/products{id}', [ProductController::class, 'delete']);
+    Route::post('/logout', [UserController::class, 'logout']);
 });
